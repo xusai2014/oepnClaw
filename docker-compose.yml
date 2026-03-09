@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   openclaw-gateway:
-    image: openclaw/gateway:latest
+    image: ghcr.io/openclaw/openclaw:latest
     container_name: openclaw-gateway
     restart: unless-stopped
     # 关键：只绑定到 loopback，不暴露到公网
