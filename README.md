@@ -1,22 +1,78 @@
-# 1. 先清理之前的错误配置
-sudo rm -f /etc/yum.repos.d/docker*.repo
-sudo dnf clean all
+OpenClaw 云端部署方案
 
-# 2. 直接安装 Moby（阿里云官方维护的 Docker 兼容版本）
+
+
+# 1.服务器环境搭建 （Aliyun Linux）
+## 安装 Moby（阿里云官方维护的 Docker 兼容版本）
 sudo yum install -y moby
 
-# 3. 启动服务
+
+## 启动服务
 sudo systemctl start docker
 sudo systemctl enable docker
 
-# 4. 验证安装
+## 4. 验证安装
 docker --version
 docker run hello-world
 
+# 2.准备部署文件
+文件下载到服务器
+- docker-compose.yml
+- nginx.conf
+- .env
 
-# 首次执行（替换为你的域名）
-docker-compose run --rm certbot \
-  certonly --webroot \
-  --webroot-path=/var/www/certbot \
-  -d flygpt.cc -d www.flygpt.cc \
-  --email jerryxu521@gmail.com --agree-tos --no-eff-email
+1. 首次需要生成HTTPS证书，运行命令如下：
+```
+docker compose run --rm certbot certonly --webroot \
+  -w /var/www/certbot \
+  -d your-domain.com -d www.your-domain.com \
+  --email your@email.com --agree-tos --non-interactive
+```
+
+2. 证书生成后，启动应用
+```
+# 首次时间较长，下一次就会很快
+docker compose up -d
+```
+
+3. 获取地址，用浏览器访问
+```
+# 运行命令
+docker-compose exec openclaw-gateway openclaw dashboard --no-open
+```
+```
+# 控制台打印
+Dashboard URL: http://127.0.0.1:18789/#token=fsdfsdfsdfsdfsdfsfsdfsfsdfsdfs
+Copy to clipboard unavailable.
+Browser launch disabled (--no-open). Use the URL above.
+```
+浏览器访问该地址（还不能正常使用，需要进行设备信任进入第六步）
+
+6. 在服务器查看应用信任设备
+```
+# 运行命令
+docker-compose exec openclaw-gateway openclaw devices list
+```
+```
+# 控制台打印
+Pending (1)
+┌──────────────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬──────────┬────────────┬──────────┬────────┐
+│ Request                              │ Device                                                                                                                         │ Role     │ IP         │ Age      │ Flags  │
+├──────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼──────────┼────────────┼──────────┼────────┤
+│ 12b6be94-0a84-12b6be9412b6be9412b6be │ 41da7bd68481bc41da7bd68481bc41da7bd68481bc41da7bd68481bc41da7bd6                                                               │ operator │            │ just now │        │
+└──────────────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────┴────────────┴──────────┴────────┘
+Paired (1)
+......
+
+```
+```
+# 运行命令
+
+docker-compose exec openclaw-gateway openclaw device approve 12b6be94-0a84-12b6be9412b6be9412b6be
+```
+
+## 设备信任成功，可以养🦞了！！！！
+
+
+
+
