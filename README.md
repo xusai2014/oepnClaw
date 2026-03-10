@@ -76,7 +76,7 @@ Paired (1)
 ```
 # 运行命令
 
-docker-compose exec openclaw-gateway openclaw device approve 12b6be94-0a84-12b6be9412b6be9412b6be
+docker-compose exec openclaw-gateway openclaw devices approve 12b6be94-0a84-12b6be9412b6be9412b6be
 ```
 
 ## 设备信任成功，可以养🦞了！！！！
