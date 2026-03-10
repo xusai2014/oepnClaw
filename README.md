@@ -82,5 +82,33 @@ docker-compose exec openclaw-gateway openclaw device approve 12b6be94-0a84-12b6b
 ## 设备信任成功，可以养🦞了！！！！
 
 
+ollama 私有化部署的使用方式
+```
+# 查看ollama 大模型镜像
+docker-compose exec ollama ollama list
+
+# 根据需要拉取
+docker-compose exec ollama ollama pull qwen2.5:14b
+
+# 然后配置到 openclaw.json
+   "models": {
+     "mode": "merge",
+     "providers": {
+       "ollama": {
+        "baseUrl": "http://ollama:11434/v1",   // Docker 容器内用 ollama:11434；本地单机用 http://127.0.0.1:11434/v1
+        "api": "openai-responses",
+        "apiKey": "ollama",
+        "models": [
+         {
+          "id": "qwen2.5:14b",
+          "name": "Qwen2.5 14B"
+         }
+       ]
+      }
+    }
+
+```
+
+
 
 
