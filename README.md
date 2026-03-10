@@ -12,3 +12,11 @@ sudo systemctl enable docker
 # 4. 验证安装
 docker --version
 docker run hello-world
+
+
+# 首次执行（替换为你的域名）
+docker-compose run --rm certbot \
+  certonly --webroot \
+  --webroot-path=/var/www/certbot \
+  -d flygpt.cc -d www.flygpt.cc \
+  --email jerryxu521@gmail.com --agree-tos --no-eff-email
