@@ -1,27 +1,35 @@
-OpenClaw 云端部署方案
+# OpenClaw 云端部署方案
 
 
 
-# 1.服务器环境搭建 （Aliyun Linux）
-## 安装 Moby（阿里云官方维护的 Docker 兼容版本）
+## 1.服务器环境搭建 （Aliyun Linux）
+
+### 第一步安装 Moby（阿里云官方维护的 Docker 兼容版本）
+```
 sudo yum install -y moby
+```
 
-
-## 启动服务
+### 第二步启动服务
+```
 sudo systemctl start docker
 sudo systemctl enable docker
+```
 
-## 4. 验证安装
+### 第三步验证安装
 docker --version
 docker run hello-world
 
-# 2.准备部署文件
+以上就完成了服务器环境的搭建
+
+## 2.准备部署文件
 文件下载到服务器
 - docker-compose.yml
 - nginx.conf
 - .env
 
-1. 首次需要生成HTTPS证书，运行命令如下：
+## 3.启动并配置应用
+
+1. 首次启动需要生成HTTPS证书，运行命令如下：
 ```
 docker compose run --rm certbot certonly --webroot \
   -w /var/www/certbot \
