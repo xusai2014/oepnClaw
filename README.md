@@ -108,7 +108,10 @@ docker-compose exec ollama ollama pull qwen2.5:14b
     }
 
 ```
-
+````
+# 配置能力
+docker-compose exec openclaw-gateway openclaw onboard
+```
 
 
 
