@@ -16,8 +16,10 @@ sudo systemctl enable docker
 ```
 
 ### 第三步验证安装
+```
 docker --version
 docker run hello-world
+```
 
 以上就完成了服务器环境的搭建
 
