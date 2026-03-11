@@ -3,6 +3,7 @@ version: '3.9'
 services:
   openclaw-gateway:
     image: ghcr.io/openclaw/openclaw:latest
+    entrypoint: ["/bin/sh", "/entrypoint/openclaw.sh"]  # 🔧 改为这样
     container_name: openclaw-gateway
     restart: unless-stopped
     environment:
@@ -17,46 +18,11 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     ports:
       - "127.0.0.1:18789:18789"
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        mkdir -p /home/node/.openclaw
-
-        # 强制写入最小有效 config（避免 bind invalid / mode 未启用）
-        cat > /home/node/.openclaw/openclaw.json <<'EOF'
-        {
-          "gateway": {
-            "mode": "local",
-            "bind": "lan",
-            "port": 18789,
-            "auth": {
-              "mode": "token",
-              "token": "ENV_TOKEN_PLACEHOLDER"
-            },
-            "controlUi": {
-              "enabled": true,
-              "allowInsecureAuth": true,
-              "allowedOrigins": [
-                "https://example.cc",
-                "https://www.example.cc",
-                "http://example.cc",
-                "http://www.example.cc",
-                "http://localhost:18789",
-                "http://127.0.0.1:18789"
-              ]
-            }
-          }
-        }
-        EOF
-
-        # 用环境变量替换 token（防止 .env 不生效或覆盖问题）
-        sed -i "s/ENV_TOKEN_PLACEHOLDER/${OPENCLAW_GATEWAY_TOKEN}/g" /home/node/.openclaw/openclaw.json
-
-        # 启动 gateway（镜像默认命令）
-        exec node dist/index.js gateway
+      - "127.0.0.1:3000:3000"
     volumes:
       - ./openclaw-data:/home/node/.openclaw
       - ./openclaw-workspace:/home/node/.openclaw/workspace
+      - ./entrypoint:/entrypoint  # 🔧 挂载脚本
     networks:
       - openclaw-net
     healthcheck:
